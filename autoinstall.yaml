@@ -43,6 +43,3 @@ autoinstall:
           dhcp4: true
   user-data:
     disable_root: false
-    ssh:
-      install-server: true
-      allow-pw: true
