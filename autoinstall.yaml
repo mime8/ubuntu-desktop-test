@@ -1,0 +1,48 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: ubuntu-server
+    username: midnight-bastion
+    password: "$6$Xv0DDO7kv9U7dfcG$hrh9zwCqG2MrjA8q1FiIbmhKSjO0oPQeM7j2SdyWi5jwv7vQ4SsAwTTmFwR7BGt9HvDmOXnidcOahGlrAy/dU0"
+  storage:
+    layout:
+      name: zfs-encrypted
+    config:
+      - id: disk-sda
+        type: disk
+        match:
+          ssd: true
+        ptable: gpt
+        wipe: superblock-recursive
+        preserve: false
+        name: ''
+        grub_device: true
+        serial: ''
+        device: /dev/sda
+      - id: zfs_pool
+        type: zpool
+        name: rpool
+        disks:
+          - id: disk-sda
+        pools:
+          - name: rpool
+            layout: stripe
+            mountpoint: /
+            encryption: true
+            keylocation: prompt
+            keyformat: passphrase
+  locale: en_US
+  keyboard:
+    layout: us
+  network:
+    network:
+      version: 2
+      ethernets:
+        eth0:
+          dhcp4: true
+  user-data:
+    disable_root: false
+    ssh:
+      install-server: true
+      allow-pw: true
